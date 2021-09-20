@@ -74,7 +74,7 @@ socket.on('userList', ({room, users})=>{
         room,
         users
     })
-    $sidebar.html = html
+    $sidebar.innerHTML = html
 })
 
 //submiting the message to server
