@@ -17,32 +17,32 @@ const $sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix : true})
 
 
-// const autoScroll = () =>{
-//     //get new message
+const autoScroll = () =>{
+    //get new message
 
-//     const $newMessage = $messages.lastElementChild
+    const $newMessage = $messages.lastElementChild
 
-//     // heigh of new message
-//     const newMessageStyles = getComputedStyle($newMessage)
-//     const newMessageMargin = parseInt(newMessageStyles.marginBottom)
-//     const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+    // heigh of new message
+    const newMessageStyles = getComputedStyle($newMessage)
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
 
-//     //visible height
+    //visible height
 
-//     const visibleHeight = $messages.offsetHeight
+    const visibleHeight = $messages.offsetHeight
 
-//     //height of container
-//     const containerHeight = $messages.scrollHeight
+    //height of container
+    const containerHeight = $messages.scrollHeight
 
-//     //how far it is scrolled
+    //how far it is scrolled
 
-//     const scrollOffset = $messages.scrollTop + visibleHeight
+    const scrollOffset = $messages.scrollTop + visibleHeight
 
-//     if((containerHeight - newMessageHeight) <= scrollOffset){
-//         $messages.scrollTop = $messages.scrollHeight
+    if((containerHeight - newMessageHeight) <= scrollOffset){
+        $messages.scrollTop = $messages.scrollHeight
 
-//     }
-// }
+    }
+}
 
 //receives messages from server
 socket.on('locationMessage', ({url, createdAt, username})=>{
@@ -53,6 +53,7 @@ socket.on('locationMessage', ({url, createdAt, username})=>{
         username
     })
     $messages.insertAdjacentHTML('beforeend', html)
+    autoScroll()
 })
 
 
@@ -65,6 +66,7 @@ socket.on('message', ({message, createdAt, username})=>{
         username
     })
     $messages.insertAdjacentHTML('beforeend', html)
+    autoScroll()
 })
 
 //receives messages from server
