@@ -16,9 +16,33 @@ const $sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 //Options
 const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix : true})
 
-socket.on('countUpdated', (count)=>{
-    console.log('count was updated to ', count)
-})
+
+// const autoScroll = () =>{
+//     //get new message
+
+//     const $newMessage = $messages.lastElementChild
+
+//     // heigh of new message
+//     const newMessageStyles = getComputedStyle($newMessage)
+//     const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+//     const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+
+//     //visible height
+
+//     const visibleHeight = $messages.offsetHeight
+
+//     //height of container
+//     const containerHeight = $messages.scrollHeight
+
+//     //how far it is scrolled
+
+//     const scrollOffset = $messages.scrollTop + visibleHeight
+
+//     if((containerHeight - newMessageHeight) <= scrollOffset){
+//         $messages.scrollTop = $messages.scrollHeight
+
+//     }
+// }
 
 //receives messages from server
 socket.on('locationMessage', ({url, createdAt, username})=>{
@@ -40,17 +64,17 @@ socket.on('message', ({message, createdAt, username})=>{
         createdAt:moment(createdAt).format("DD-MM-YY h:mm:ss a"),
         username
     })
-    $messages.insertAdjacentHTML('', html)
+    $messages.insertAdjacentHTML('beforeend', html)
 })
 
 //receives messages from server
 socket.on('userList', ({room, users})=>{
-    console.log(users)
+    console.log(room, users)
     const html = Mustache.render($sidebarTemplate, {
         room,
         users
     })
-    $sidebar.innerHTML = html
+    $sidebar.html = html
 })
 
 //submiting the message to server
