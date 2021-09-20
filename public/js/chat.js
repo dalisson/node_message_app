@@ -6,34 +6,51 @@ const $msgButton = $msgForm.querySelector('#sendMsg')
 const $msgInput = $msgForm.querySelector('input')
 const $sendLocationButton = document.querySelector("#sendLocation")
 const $messages = document.querySelector("#messagesDiv")
+const $sidebar = document.querySelector("#sidebar")
 
 //templates
 const $messageTemplate = document.querySelector("#messageTemplate").innerHTML
 const $locationTemplate = document.querySelector("#locationTemplate").innerHTML
+const $sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
+
+//Options
+const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix : true})
 
 socket.on('countUpdated', (count)=>{
     console.log('count was updated to ', count)
 })
 
 //receives messages from server
-socket.on('locationMessage', ({url, createdAt})=>{
+socket.on('locationMessage', ({url, createdAt, username})=>{
 
     const html = Mustache.render($locationTemplate, {
         url,
-        createdAt:moment(createdAt).format("DD-MM-YY h:mm:ss a")
+        createdAt:moment(createdAt).format("DD-MM-YY h:mm:ss a"),
+        username
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })
 
 
 //receives messages from server
-socket.on('message', ({message, createdAt})=>{
+socket.on('message', ({message, createdAt, username})=>{
 
     const html = Mustache.render($messageTemplate, {
         message,
-        createdAt:moment(createdAt).format("DD-MM-YY h:mm:ss a")
+        createdAt:moment(createdAt).format("DD-MM-YY h:mm:ss a"),
+        username
     })
-    $messages.insertAdjacentHTML('beforeend', html)
+    $messages.insertAdjacentHTML('', html)
+})
+
+//receives messages from server
+socket.on('userList', ({room, users})=>{
+    console.log(users)
+    const html = Mustache.render($sidebarTemplate, {
+        room,
+        users
+    })
+    $sidebar.innerHTML = html
 })
 
 //submiting the message to server
@@ -69,4 +86,9 @@ $sendLocationButton.addEventListener('click',() =>{
             $sendLocationButton.removeAttribute('disabled')
         })
     })
+})
+
+socket.emit('join', {username, room}, (message) =>{
+    alert(message)
+    location.href = '/'
 })
